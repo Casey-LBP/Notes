@@ -1,9 +1,0 @@
-trigger:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - src/GovX.Catalogs.Rpc/*  # when anything is changed in this folder kickoff this pipeline
-    exclude: 
-      - '*'
