@@ -1,0 +1,69 @@
+name: $(major).$(minor).$(patch)
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  project: '**/*.csproj'
+  major: 0
+  minor: 4
+  patch: $[counter(format('{0}.{1}', variables['major'], variables['minor']), 0)]
+  branchname: $[replace(variables['System.PullRequest.SourceBranch'], 'refs/heads/', '')]
+  isPullRequest: $[eq(variables['Build.Reason'], 'PullRequest')]
+  checkPackageVersionType: $[replace(variables['isPullRequest'], 'True', '-preview')]
+  packageVersionType: $[replace(variables['checkPackageVersionType'], 'False', '')]
+  packageVersion: $(major).$(minor).$(patch)$(packageVersionType)
+
+steps:
+  - task: UseDotNet@2
+    displayName: install net6
+    inputs:
+      version: '6.0.201'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run restore'
+    inputs:
+      command: 'restore'
+      projects: '$(project)'
+      feedsToUse: 'select'
+      vstsFeed: 'd82ba27b-a9c1-41f8-b3d4-0b79f632133f'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build'
+    inputs:
+      command: 'build'
+      projects: '$(project)'
+      arguments: '--configuration Release --no-restore'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack GovX.EventHubs.Abstractions'
+    inputs:
+      command: 'pack'
+      packagesToPack: '**/GovX.EventHubs.Abstractions.csproj'
+      configuration: 'Release'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/abstractions/bin'
+      nobuild: true
+      versioningScheme: byEnvVar
+      versionEnvVar: packageVersion
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack GovX.EventHubs'
+    inputs:
+      command: 'pack'
+      packagesToPack: '**/GovX.EventHubs.csproj'
+      configuration: 'Release'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/bin'
+      nobuild: true
+      versioningScheme: byEnvVar
+      versionEnvVar: packageVersion
+  
+  - task: NuGetCommand@2
+    displayName: 'dotnet push'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: 'd82ba27b-a9c1-41f8-b3d4-0b79f632133f'
