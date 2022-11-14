@@ -1,0 +1,11 @@
+trigger: 
+  branches:
+    include:
+      - pr
+    exclude:
+      - '*'
+  paths:
+    include:
+      - '**/Dockerfile.dev/**'
+    exclude:
+      - '*'
