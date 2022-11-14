@@ -1,0 +1,22 @@
+name: $(major).$(minor).$(patch)
+
+trigger: 
+  tags:
+    include:
+      [ 'v*.*.*' ]
+pr:
+	branches
+    include:
+      - '**/Dockerfile.dev/**'
+    exclude:
+      - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+variables: 
+  major: 0
+  minor: 4
+  patch: $[counter(format('{0}.{1}', variables['major'], variables['minor']), 0)]
+  packageVersion: $(major).$(minor).$(patch)
+  branchname: $[replace(variables['System.PullRequest.SourceBranch'], 'refs/heads/', '')]
