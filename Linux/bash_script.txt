@@ -1,0 +1,4 @@
+# how to make a .sh file executible
+
+# see what files have what permissions
+ls -al
