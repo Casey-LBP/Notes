@@ -75,3 +75,14 @@ For example, the code below sends an email to the currently logged on user retri
 
 $ recipient=`logname`
 $ echo "Email text" |  mail -s "this is the subject" "$recipient@domain.com"
+----------------------------------------------------------
+11. grep
+
+When we need to find a file but we don't remember its exact 
+location or the path, grep will help you to solve this problem.
+We can use the grep command to help finding the file based on given 
+keywords.
+
+$ grep user /etc/passwd
+
+grep stands for globally search for regular expression and print out.
