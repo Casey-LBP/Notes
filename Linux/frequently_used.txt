@@ -86,3 +86,20 @@ keywords.
 $ grep user /etc/passwd
 
 grep stands for globally search for regular expression and print out.
+------------------------------------------------------------
+12. locate
+
+The locate - a.k.a. find - command is meant to find a file within the Linux OS. 
+If you don't know the name of a certain file or you aren't sure where the file 
+is saved and stored, the locate command comes in handy.
+  
+$locate -i *red*house**city*
+
+The stated command will locate an file with the a file name containing 
+"Red", "House" and "City". A note on the input: the use of "-i" tells 
+the system to search for a file unspecific of capitalization 
+(Linux functions in lower case).
+The use of the asterisk "*" signifies searching for a wildcard.A wildcard tells the system to pull any and all files containing the search criteria.
+By specifying -i with wildcards, the locate CLI command will pull back all files containing your search criteria effectively
+casting the widest search net the system will allow.
+
