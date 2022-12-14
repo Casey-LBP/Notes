@@ -1,0 +1,6 @@
+Set up Kubernetes cluster
+-------------------------
+Common Setup
+- 3 ubuntu servers with correct sizes = https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+- list of their public IP addresses
+- Linux User for accessin the machines
